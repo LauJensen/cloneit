@@ -29,6 +29,17 @@
 
 (defn invalid-email? [x] false)
 
+(defn with-head [session title & body]
+  (html
+   [:head
+    [:title title]
+    (include-css "/styles/reddit.css")]
+   [:body
+    (if-let [user (@online-users (:id session))]
+      [:div#user (:username user) (link-to "/logout/" "(Log out)")]
+      [:div#user (link-to "/login/" "(Log in)")])
+    body]))
+
 (defn add-link [session [title url]]
   (redirect-to
    (cond
@@ -50,17 +61,6 @@
 		      poster (pprint date) points "points")]
        (link-to (str "/up/" url)   "Up")
        (link-to (str "/down/" url) "Down")])))
-
-(defn with-head [session title & body]
-  (html
-   [:head
-    [:title title]
-    (include-css "/styles/reddit.css")]
-   [:body
-    (if-let [user (@online-users (:id session))]
-      [:div#user (:username user) (link-to "/logout/" "(Log out)")]
-      [:div#user (link-to "/login/" "(Log in)")])
-    body]))
 
 (defn reddit-new-link [session msg]
   (with-head "Reddit.Clojure - Submit to our authority"
@@ -98,16 +98,6 @@
 		 [:td (text-field field)]])]
 	     (submit-button "Sign up"))))
 
-(defn login-form [session msg]
-  (with-head session "Reddit.Clojure - Login screen"   
-    [:h1 "Login"]
-    (when msg [:h4 msg])
-    (form-to [:post "/login/"]
-	     [:table
-	      [:tr [:td (text-field "email") ]]
-	      [:tr [:td (password-field "psw") ]]]
-	     (submit-button "Login"))))
-
 (defn login-user [session [email password]]
   (redirect-to 
    (if-let [user (@users email)]
@@ -122,6 +112,16 @@
   (dosync
    (alter online-users dissoc id))
   (redirect-to "/"))
+
+(defn login-form [session msg]
+  (with-head session "Reddit.Clojure - Login screen"   
+    [:h1 "Login"]
+    (when msg [:h4 msg])
+    (form-to [:post "/login/"]
+	     [:table
+	      [:tr [:td "email"]   [:td (text-field "email") ]]
+	      [:tr [:td "password"][:td (password-field "psw") ]]]
+	     (submit-button "Login"))))
 
 (defn reddit-home [session]
   (with-head session "Reddit.Clojure"
