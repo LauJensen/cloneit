@@ -14,9 +14,10 @@ h3 {
     vertical-align: super;
 }
 
-a {
+a  {
     margin-left: 5px;
     margin-right: 5px;
+    color: blue;
 }
 
 span {

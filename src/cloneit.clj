@@ -28,11 +28,15 @@
        (link-to (str "/up/" url)   "Up")
        (link-to (str "/down/" url) "Down")])))
 
-(defn reddit-new-link [msg]
+(defn with-head [title & body]
   (html
    [:head
-    [:title "Reddit.Clojure - Submit to our authority"]]
-   [:body
+    [:title title]
+    (include-css "/styles/reddit.css")]
+   [:body body]))
+
+(defn reddit-new-link [msg]
+  (with-head "Reddit.Clojure - Submit to our authority"
     [:h1 "Reddit.Clojure - Submit a new link"]
     [:h3 "Submit a new link"]
     (when msg [:p {:style "color: red;"} msg])
