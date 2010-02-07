@@ -132,7 +132,7 @@
     [:h1 "Highest ranking list"]
     [:ol (render-links #(:points (val %))  >)]
     [:h1 "Latest link"]  
-    [:ol (render-links #(.getMillis (Duration. (:date %) (DateTime.))) >)]))
+    [:ol (render-links #(.getMillis (Duration. (:date (val %)) (DateTime.))) >)]))
 
 (defn rate [url mfn]
   (dosync
